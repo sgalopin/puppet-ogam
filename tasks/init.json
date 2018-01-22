@@ -1,0 +1,14 @@
+{
+  "description": "Allows you to perform ogam service functions",
+  "input_method": "stdin",
+  "parameters": {
+    "action": {
+      "description": "Action to perform ",
+      "type": "Enum[build_db, build_ogamserver, build_ogamdesktop, build_ogamservices]"
+    },
+    "environment": {
+      "description": "Action's environment ",
+      "type": "Enum[development, production]"
+    }
+  }
+}

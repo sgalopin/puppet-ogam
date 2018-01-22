@@ -42,7 +42,92 @@
 #
 # Copyright 2018 Your name here, unless otherwise noted.
 #
-class ogam {
+class ogam  {
 
+    package { 'unzip': ensure => 'installed' }
 
+    # Directories paths
+    $git_clone_directory      = '/root/tmp/ogam/sources'
+    $local_scripts_directory  = '/root/tmp/ogam/scripts'
+    $conf_directory           = '/etc/ogam'
+    $docroot_directory        = '/var/www/ogam/web'
+    $tilecache_directory      = '/var/www/tilecache'
+    $tmp_directory            = '/var/tmp/ogam'
+    $log_directory            = '/var/log/ogam'
+    $tomcat_directory         = '/var/lib/tomcat8'
+
+    # Defaults directories
+    file { [ "${git_clone_directory}/..",
+              $git_clone_directory,
+              $local_scripts_directory, ]:
+        ensure  => directory,
+        mode    => '0700',
+    }
+    file { $conf_directory:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0750',
+    }
+    file { [ "${docroot_directory}/..",
+              $docroot_directory, ]:
+        ensure => 'directory',
+        #owner => 'www-data',
+        group => 'www-data',
+        mode => '0750'
+    }
+    file { [  $tilecache_directory,
+              "${tilecache_directory}/cache", ]:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0770',
+    }
+    file { $tmp_directory:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0771',
+    }
+    file { $log_directory:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0770',
+    }
+
+    # Class
+    #include ogam::java
+    #class {'ogam::git':
+    #    git_clone_directory => $git_clone_directory
+    #}
+    #class {'ogam::postgresql':
+    #    git_clone_directory => $git_clone_directory,
+    #    tmp_directory => $tmp_directory,
+    #}
+    #class {'ogam::tomcat':
+    #    git_clone_directory => $git_clone_directory,
+    #    tmp_directory => $tmp_directory,
+    #}
+    class {'ogam::apache':
+        docroot_directory => $docroot_directory,
+        log_directory => $log_directory,
+        conf_directory => $conf_directory,
+    }
+    class {'ogam::sencha':
+        local_scripts_directory => $local_scripts_directory,
+        tmp_directory => $tmp_directory,
+    }
+    class {'ogam::mapserv':
+        git_clone_directory => $git_clone_directory,
+        conf_directory => $conf_directory,
+        log_directory => $log_directory,
+    }
+    class {'ogam::tilecache':
+        git_clone_directory => $git_clone_directory,
+        tilecache_directory => $tilecache_directory,
+    }
+    class {'ogam::tasks':
+        docroot_directory => $docroot_directory,
+        git_clone_directory => $git_clone_directory,
+        local_scripts_directory => $local_scripts_directory,
+        tmp_directory => $tmp_directory,
+        tomcat_directory => $tomcat_directory,
+    }
 }
