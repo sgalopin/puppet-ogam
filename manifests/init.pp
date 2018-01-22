@@ -93,18 +93,18 @@ class ogam  {
     }
 
     # Class
-    #include ogam::java
-    #class {'ogam::git':
-    #    git_clone_directory => $git_clone_directory
-    #}
-    #class {'ogam::postgresql':
-    #    git_clone_directory => $git_clone_directory,
-    #    tmp_directory => $tmp_directory,
-    #}
-    #class {'ogam::tomcat':
-    #    git_clone_directory => $git_clone_directory,
-    #    tmp_directory => $tmp_directory,
-    #}
+    include ogam::java
+    class {'ogam::git':
+        git_clone_directory => $git_clone_directory
+    }
+    class {'ogam::postgresql':
+        git_clone_directory => $git_clone_directory,
+        tmp_directory => $tmp_directory,
+    }
+    class {'ogam::tomcat':
+        git_clone_directory => $git_clone_directory,
+        tmp_directory => $tmp_directory,
+    }
     class {'ogam::apache':
         docroot_directory => $docroot_directory,
         log_directory => $log_directory,
