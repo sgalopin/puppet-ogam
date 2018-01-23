@@ -57,7 +57,8 @@ class ogam  {
     $tomcat_directory         = '/var/lib/tomcat8'
 
     # Defaults directories
-    file { [ "${git_clone_directory}/..",
+    file { [ '/root/tmp',
+             '/root/tmp/ogam',
               $git_clone_directory,
               $local_scripts_directory, ]:
         ensure  => directory,
@@ -68,7 +69,7 @@ class ogam  {
         group => 'www-data',
         mode    => '0750',
     }
-    file { [ "${docroot_directory}/..",
+    file { [ '/var/www/ogam',
               $docroot_directory, ]:
         ensure => 'directory',
         #owner => 'www-data',

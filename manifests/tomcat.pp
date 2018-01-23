@@ -20,12 +20,17 @@ class ogam::tomcat (
         manage_service => true,
     }
 
+    file { "${tomcat_directory}/lib":
+        ensure  => directory,
+        owner => 'tomcat8',
+        group => 'tomcat8',
+    }->
     file { "${tomcat_directory}/lib/javax.mail.jar":
         ensure  => link,
         target => '/usr/share/java/gnumail.jar',
         owner => 'tomcat8',
         group => 'tomcat8',
-    }
+    }->
     file { "${tomcat_directory}/lib/postgresql-jdbc4.jar":
         ensure  => link,
         target => '/usr/share/java/postgresql-jdbc4.jar',
