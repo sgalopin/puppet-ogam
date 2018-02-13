@@ -69,7 +69,8 @@ class ogam  {
         group => 'www-data',
         mode    => '0750',
     }
-    file { [ '/var/www/ogam',
+    file { [ '/var/www',
+             '/var/www/ogam',
               $docroot_directory, ]:
         ensure => 'directory',
         #owner => 'www-data',
