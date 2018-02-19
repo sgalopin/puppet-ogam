@@ -60,9 +60,9 @@ psql -qw -U postgres -h localhost -d ogam -f "<%= $ogam::git_clone_directory %>/
 psql -qw -U postgres -h localhost -d ogam -c "GRANT CONNECT ON DATABASE ogam TO ogam;"
 
 echo "-- Overriding defaut config values"
-psql -qw -U postgres -h localhost -d ogam -c "UPDATE website.application_parameters SET value = '<%= $ogam::tmp_directory %>/ogam_upload' WHERE name = 'UploadDirectory';"
-psql -qw -U postgres -h localhost -d ogam -c "UPDATE website.application_parameters SET value = '<%= $ogam::tmp_directory %>/upload' WHERE name = 'uploadDir';"
-psql -qw -U postgres -h localhost -d ogam -c "UPDATE website.application_parameters SET value = '<%= $ogam::tmp_directory %>/upload/images/' WHERE name = 'image_upload_dir';"
+psql -qw -U postgres -h localhost -d ogam -c "UPDATE website.application_parameters SET value = '<%= $ogam::service_upload_directory %>' WHERE name = 'UploadDirectory';"
+psql -qw -U postgres -h localhost -d ogam -c "UPDATE website.application_parameters SET value = '<%= $ogam::server_upload_directory %>' WHERE name = 'uploadDir';"
+psql -qw -U postgres -h localhost -d ogam -c "UPDATE website.application_parameters SET value = '<%= $ogam::server_upload_directory %>/images/' WHERE name = 'image_upload_dir';"
 psql -qw -U postgres -h localhost -d ogam -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $ogam::vhost_servername %>/mapserverProxy.php?\"],\"params\":{\"SERVICE\":\"WMS\",\"VERSION\":\"1.1.1\",\"REQUEST\":\"GetMap\"}}' WHERE name = 'Local_MapProxy_Mapserv_WMS_GetMap';"
 psql -qw -U postgres -h localhost -d ogam -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $ogam::vhost_servername %>/tilecacheProxy.php?\"],\"params\":{\"SERVICE\":\"WMS\",\"VERSION\":\"1.1.1\",\"REQUEST\":\"GetMap\"}}' WHERE name = 'Local_MapProxy_Tilecache_WMS_GetMap';"
 psql -qw -U postgres -h localhost -d ogam -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $ogam::vhost_servername %>/mapserverProxy.php?\"],\"params\":{\"SERVICE\":\"WFS\",\"VERSION\":\"1.1.0\",\"REQUEST\":\"GetFeature\"}}' WHERE name = 'Local_MapProxy_WFS_GetFeature';"

@@ -13,12 +13,6 @@ class ogam::apache {
       ensure => 'installed'
     }->
     class { 'apache::mod::php': }->
-    file_line { 'short_open_tag':
-      ensure => present,
-      path   => '/etc/php/7.0/apache2/php.ini',
-      match  => 'short_open_tag = .*',
-      line   => 'short_open_tag = On',
-    }->
     file_line { 'error_reporting':
       ensure => present,
       path   => '/etc/php/7.0/apache2/php.ini',
@@ -102,7 +96,7 @@ class ogam::apache {
           custom_fragment => "
 SetEnv MS_MAPFILE \"${ogam::conf_directory}/mapserver/ogam.map\"
 SetEnv MS_ERRORFILE \"${ogam::log_directory}/mapserver_ogam.log\"
-SetEnv MS_DEBUGLEVEL 5",
+SetEnv MS_DEBUGLEVEL 0",
         },{
           path => "/tilecache-ogam",
           provider => 'location',

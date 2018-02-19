@@ -41,13 +41,14 @@ echo "-- Updating of the IP"
 sed -i "s|192.168.50.4|<%= $ogam::host_ip_address %>|" <%= $ogam::docroot_directory %>/app_dev.php
 
 echo "-- Set permissions on cache and logs"
+apt-get install -y acl
 HTTPDUSER=`ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
 setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX $composer_path/app/cache $composer_path/app/logs $composer_path/app/sessions
 setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX $composer_path/app/cache $composer_path/app/logs $composer_path/app/sessions
 
 echo "-- Reset of the vendor directory"
-rm -rdf $composer_path/vendor && sudo -u www-data mkdir $composer_path/vendor && sudo chmod g+w $composer_path/vendor
-rm -rdf $composer_path/bin && sudo -u www-data mkdir $composer_path/bin && sudo chmod g+w $composer_path/bin
+rm -rdf $composer_path/vendor && sudo mkdir $composer_path/vendor && sudo chgrp www-data $composer_path/vendor && sudo chmod g+w $composer_path/vendor
+rm -rdf $composer_path/bin && sudo mkdir $composer_path/bin && sudo chgrp www-data $composer_path/bin && sudo chmod g+w $composer_path/bin
 
 echo "-- Composer install"
 HOME=/root && export HOME
