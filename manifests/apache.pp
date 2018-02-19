@@ -1,53 +1,65 @@
-class ogam::apache (
-    String $docroot_directory = '/var/www/ogam/web',
-    String $log_directory = '/var/log/ogam',
-    String $conf_directory = '/etc/ogam',
-) {
-    # APACHE
+class ogam::apache {
+
+    # APACHE Install
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-    }
-
-    include apache::params # contains common config settings
-
-    # PHP (mayflower/php)
-    class { '::php':
-        ensure       => latest,
-        manage_repos => true, # The default is to have php::manage_repos enabled to add apt sources for Dotdeb on Debian and ppa:ondrej/php5 on Ubuntu with packages for the current stable PHP version closely tracking upstream.
-        fpm          => false,
-        dev          => false,
-        composer     => false,
-        pear         => false,
-        phpunit      => true,
-        extensions => {
-            xml      => {}, # For phpunit via composer
-            pgsql => {
-                provider => 'apt',
-            },
-        },
+        log_level => 'error'
     }
 
     # APACHE Modules
-    include apache::mod::php
+    # 'libapache2-mod-php7.0' package required on debian (stretch) to avoid a bug... (but not on ubuntu-16.04)
+    package { [ 'libapache2-mod-php7.0', 'php-xml', 'php-pgsql' ]:
+      ensure => 'installed'
+    }->
+    class { 'apache::mod::php': }->
+    file_line { 'short_open_tag':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'short_open_tag = .*',
+      line   => 'short_open_tag = On',
+    }->
+    file_line { 'error_reporting':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'error_reporting = .*',
+      line   => 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT',
+    }->
+    file_line { 'display_errors':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'display_errors = .*',
+      line   => 'display_errors = Off',
+    }->
+    file_line { 'display_startup_errors':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'display_startup_errors = .*',
+      line   => 'display_startup_errors = Off',
+    }->
+    file_line { 'log_errors':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'log_errors = .*',
+      line   => 'log_errors = On',
+    }
+
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
 
-    # Parameters
-    $vhost_dir= $apache::params::vhost_dir
-    $user= $apache::params::user
-    $group= $apache::params::group
+    # APACHE Parameters
+    # include apache::params # contains common config settings
+    # $vhost_dir= $apache::params::vhost_dir
+    # $user= $apache::params::user
+    # $group= $apache::params::group
 
-    # Virtual host with apache
-    apache::vhost { 'agent1.example.com':
-        servername => 'example.com',
-        serveraliases => [
-          'agent1.example.com',
-        ],
+    # APACHE Virtual host
+    apache::vhost { $ogam::vhost_servername:
+        servername => $ogam::vhost_servername,
         port    => '80',
-        docroot => $docroot_directory,
+        docroot => $ogam::docroot_directory,
         manage_docroot => false,
         docroot_owner => 'www-data',
         docroot_group => 'www-data',
@@ -67,35 +79,29 @@ class ogam::apache (
             'opcache.fast_shutdown' => '1',
         },
         directories => [{
-          path => $docroot_directory,
+          path => $ogam::docroot_directory,
           override => 'None',
-          # Version < 2.3
-          #order => 'Allow,Deny',
-          #allow => 'from All',
-          # Version >= 2.3
           require => 'all granted',
           options => ['-MultiViews'],
           rewrites => [
             {
-              #rewrite_cond => ['%{REQUEST_FILENAME} -s [OR]', '%{REQUEST_FILENAME} -l [OR]', '%{REQUEST_FILENAME} -d'],
-              #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ app.php [NC,L]'],
               comment      => 'Redirection to Symfony',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
               rewrite_rule => ['^(.*)$ app.php [QSA,L]'],
             },
           ],
         },{
-          path => "${docroot_directory}/bundles",
+          path => "${ogam::docroot_directory}/bundles",
           custom_fragment => 'RewriteEngine Off',
         },{
-          path => "${docroot_directory}/OgamDesktop",
+          path => "${ogam::docroot_directory}/OgamDesktop",
           custom_fragment => 'RewriteEngine Off',
         },{
           path => "/mapserv-ogam",
           provider => 'location',
           custom_fragment => "
-SetEnv MS_MAPFILE \"${conf_directory}/mapserver/ogam.map\"
-SetEnv MS_ERRORFILE \"${log_directory}/mapserver_ogam.log\"
+SetEnv MS_MAPFILE \"${ogam::conf_directory}/mapserver/ogam.map\"
+SetEnv MS_ERRORFILE \"${ogam::log_directory}/mapserver_ogam.log\"
 SetEnv MS_DEBUGLEVEL 5",
         },{
           path => "/tilecache-ogam",
@@ -104,7 +110,7 @@ SetEnv MS_DEBUGLEVEL 5",
         aliases => [
             {
                 alias => '/odp',
-                path  => "${docroot_directory}/OgamDesktop",
+                path  => "${ogam::docroot_directory}/OgamDesktop",
             },{
                 scriptalias => '/mapserv-ogam',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",

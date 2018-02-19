@@ -30,14 +30,14 @@ echo "-- Installation of Ogam Desktop (env=$environment)"
 # Build the client app
 #----------------------------------------------------------------
 /root/bin/Sencha/Cmd/6.1.3.42/sencha \
---cwd <%= $git_clone_directory %>/website/htdocs/client/ogamDesktop \
+--cwd <%= $ogam::git_clone_directory %>/website/htdocs/client/ogamDesktop \
 app build -e $environment
 
 #----------------------------------------------------------------
 # Copy the client app into the public dir
 #----------------------------------------------------------------
 cp -Tr \
-<%= $git_clone_directory %>/website/htdocs/client/build/$environment/OgamDesktop \
-<%= $docroot_directory %>/OgamDesktop
-chown -R www-data:www-data <%= $docroot_directory %>/OgamDesktop
-chmod g+w <%= $docroot_directory %>/OgamDesktop
+<%= $ogam::git_clone_directory %>/website/htdocs/client/build/$environment/OgamDesktop \
+<%= $ogam::docroot_directory %>/OgamDesktop
+chown -R www-data:www-data <%= $ogam::docroot_directory %>/OgamDesktop
+chmod g+w <%= $ogam::docroot_directory %>/OgamDesktop

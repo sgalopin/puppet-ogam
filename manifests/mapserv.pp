@@ -1,25 +1,30 @@
-class ogam::mapserv (
-    String $git_clone_directory = '/root/tmp/ogam/sources',
-    String $conf_directory = '/etc/ogam',
-    String $log_directory = '/var/log/ogam',
-) {
-    $enhancers = [ 'cgi-mapserver', 'mapserver-bin', 'gdal-bin', 'mapserver-doc', 'libapache2-mod-fcgid' ]
+class ogam::mapserv {
+
+    $enhancers = [ 'cgi-mapserver', 'mapserver-bin', 'gdal-bin', 'libapache2-mod-fcgid' ]
     package { $enhancers: ensure => 'installed' }
 
-    file { "${conf_directory}/mapserver":
+    file { "${ogam::conf_directory}/mapserver":
       ensure  => 'directory',
       recurse => true,
-      source => "${git_clone_directory}/mapserver",
+      source => "${ogam::git_clone_directory}/mapserver",
       group   => 'www-data',
+    }->
+    ext_file_line { 'mapserver_map_log_path':
+      ensure => present,
+      path   => "${ogam::conf_directory}/mapserver/ogam.map",
+      match  => '(.*)/vagrant/ogam/website/htdocs/logs(.*)',
+      line   => "\\1${ogam::log_directory}\\2",
+    }->
+    ext_file_line { 'mapserver_map_conf_path':
+      ensure => present,
+      path   => "${ogam::conf_directory}/mapserver/ogam.map",
+      match  => '(.*)/vagrant/ogam/mapserver(.*)',
+      line   => "\\1${ogam::conf_directory}/mapserver\\2",
     }
+
     # mapserv is a fcgi compatible, use default config sethandler with .fcgi
     file { '/usr/lib/cgi-bin/mapserv.fcgi':
         ensure  => link,
         target => '/usr/lib/cgi-bin/mapserv',
-    }
-    exec { [  "sed -i 's|/vagrant/ogam/website/htdocs/logs|${log_directory}|' ogam.map",
-              "sed -i 's|/vagrant/ogam/mapserver|${conf_directory}/mapserver|' ogam.map" ]:
-      path     	=> '/usr/bin:/usr/sbin:/bin',
-      cwd 		  => "${conf_directory}/mapserver",
     }
 }

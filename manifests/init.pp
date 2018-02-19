@@ -42,25 +42,37 @@
 #
 # Copyright 2018 Your name here, unless otherwise noted.
 #
-class ogam  {
+class ogam (
+    String $vhost_servername = 'agent.example.com',
+    String $cookie_domain = '.example.com',
+    String $admin_ip_address = "192.168.50.1",
+    String $host_ip_address = $ipaddress_eth1,
+    String $pg_user = 'postgres',
+    String $pg_password = 'postgres',
+    String $app_name = 'myapp'
+) {
 
     package { 'unzip': ensure => 'installed' }
 
     # Directories paths
-    $git_clone_directory      = '/root/tmp/ogam/sources'
-    $local_scripts_directory  = '/root/tmp/ogam/scripts'
-    $conf_directory           = '/etc/ogam'
-    $docroot_directory        = '/var/www/ogam/web'
-    $tilecache_directory      = '/var/www/tilecache'
-    $tmp_directory            = '/var/tmp/ogam'
-    $log_directory            = '/var/log/ogam'
-    $tomcat_directory         = '/var/lib/tomcat8'
+    $tmp_directory            = "/root/tmp/${app_name}"
+    $git_clone_directory      = "${tmp_directory}/sources"
+    $local_scripts_directory  = "${tmp_directory}/scripts"
+    $conf_directory           = "/etc/${app_name}"
+    $www_directory            = "/var/www/${app_name}"
+    $docroot_directory        = "${www_directory}/web"
+    $tilecache_directory      = "/var/www/tilecache"
+    # If you set the server upload dir to a subdir into /var/tmp be aware of the apache service "PrivateTmp" parameter
+    $server_upload_directory  = "${www_directory}/upload"
+    $service_upload_directory = "/var/tmp/${app_name}/service_upload"
+    $log_directory            = "/var/log/${app_name}"
+    $tomcat_directory         = "/var/lib/tomcat8"
 
     # Defaults directories
     file { [ '/root/tmp',
-             '/root/tmp/ogam',
-              $git_clone_directory,
-              $local_scripts_directory, ]:
+             $tmp_directory,
+             $git_clone_directory,
+             $local_scripts_directory, ]:
         ensure  => directory,
         mode    => '0700',
     }
@@ -70,10 +82,9 @@ class ogam  {
         mode    => '0750',
     }
     file { [ '/var/www',
-             '/var/www/ogam',
-              $docroot_directory, ]:
+             $www_directory,
+             $docroot_directory, ]:
         ensure => 'directory',
-        #owner => 'www-data',
         group => 'www-data',
         mode => '0750'
     }
@@ -83,53 +94,35 @@ class ogam  {
         group => 'www-data',
         mode    => '0770',
     }
-    file { $tmp_directory:
-        ensure  => directory,
-        group => 'www-data',
-        mode    => '0771',
-    }
     file { $log_directory:
         ensure  => directory,
         group => 'www-data',
         mode    => '0770',
     }
+    file { [ $server_upload_directory,
+         "${server_upload_directory}/images", ]:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0770',
+    }
+    group { 'tomcat8':
+        ensure => 'present',
+    }->
+    file { [ "/var/tmp/${app_name}",
+             $service_upload_directory ]:
+        ensure  => directory,
+        group => 'tomcat8',
+        mode    => '0770',
+    }
 
     # Class
     include ogam::java
-    class {'ogam::git':
-        git_clone_directory => $git_clone_directory
-    }
-    class {'ogam::postgresql':
-        git_clone_directory => $git_clone_directory,
-        tmp_directory => $tmp_directory,
-    }
-    class {'ogam::tomcat':
-        git_clone_directory => $git_clone_directory,
-        tmp_directory => $tmp_directory,
-    }
-    class {'ogam::apache':
-        docroot_directory => $docroot_directory,
-        log_directory => $log_directory,
-        conf_directory => $conf_directory,
-    }
-    class {'ogam::sencha':
-        local_scripts_directory => $local_scripts_directory,
-        tmp_directory => $tmp_directory,
-    }
-    class {'ogam::mapserv':
-        git_clone_directory => $git_clone_directory,
-        conf_directory => $conf_directory,
-        log_directory => $log_directory,
-    }
-    class {'ogam::tilecache':
-        git_clone_directory => $git_clone_directory,
-        tilecache_directory => $tilecache_directory,
-    }
-    class {'ogam::tasks':
-        docroot_directory => $docroot_directory,
-        git_clone_directory => $git_clone_directory,
-        local_scripts_directory => $local_scripts_directory,
-        tmp_directory => $tmp_directory,
-        tomcat_directory => $tomcat_directory,
-    }
+    include ogam::git
+    include ogam::postgresql
+    include ogam::tomcat
+    include ogam::apache
+    include ogam::sencha
+    include ogam::mapserv
+    include ogam::tilecache
+    include ogam::tasks
 }

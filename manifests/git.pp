@@ -1,7 +1,11 @@
-class ogam::git (
-    String $git_clone_directory = '/root/tmp/ogam/sources'
-) {
-    vcsrepo { $git_clone_directory:
+class ogam::git {
+
+    file_line { 'gitlab':
+      ensure => present,
+      path   => '/etc/hosts',
+      line   => '172.28.99.2 gitlab.dockerforge.ign.fr',
+    }->
+    vcsrepo { $ogam::git_clone_directory:
         ensure   => latest,
         provider => git,
         source   => 'http://gitlab.dockerforge.ign.fr/ogam/ogam.git',

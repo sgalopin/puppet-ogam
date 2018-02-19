@@ -30,31 +30,31 @@ echo "-- Stopping tomcat"
 sudo /etc/init.d/tomcat8 stop
 
 echo "-- Integration service"
-gradle war -b <%= $git_clone_directory %>/service_integration/build.gradle
+gradle war -b <%= $ogam::git_clone_directory %>/service_integration/build.gradle
 
-cp <%= $git_clone_directory %>/service_integration/config/OGAMIntegrationService.xml \
-<%= $tomcat_directory %>/conf/Catalina/localhost/OGAMIntegrationService.xml
+cp <%= $ogam::git_clone_directory %>/service_integration/config/OGAMIntegrationService.xml \
+<%= $ogam::tomcat_directory %>/conf/Catalina/localhost/OGAMIntegrationService.xml
 
-cp <%= $git_clone_directory %>/service_integration/build/libs/service_integration-4.0.0.war \
-<%= $tomcat_directory %>/webapps/OGAMIntegrationService.war
+cp <%= $ogam::git_clone_directory %>/service_integration/build/libs/service_integration-4.0.0.war \
+<%= $ogam::tomcat_directory %>/webapps/OGAMIntegrationService.war
 
 echo "-- Harmonization service"
-gradle war -b <%= $git_clone_directory %>/service_harmonization/build.gradle
+gradle war -b <%= $ogam::git_clone_directory %>/service_harmonization/build.gradle
 
-cp <%= $git_clone_directory %>/service_harmonization/config/OGAMHarmonizationService.xml \
-<%= $tomcat_directory %>/conf/Catalina/localhost/OGAMHarmonizationService.xml
+cp <%= $ogam::git_clone_directory %>/service_harmonization/config/OGAMHarmonizationService.xml \
+<%= $ogam::tomcat_directory %>/conf/Catalina/localhost/OGAMHarmonizationService.xml
 
-cp <%= $git_clone_directory %>/service_harmonization/build/libs/service_harmonization-4.0.0.war \
-<%= $tomcat_directory %>/webapps/OGAMHarmonizationService.war
+cp <%= $ogam::git_clone_directory %>/service_harmonization/build/libs/service_harmonization-4.0.0.war \
+<%= $ogam::tomcat_directory %>/webapps/OGAMHarmonizationService.war
 
 echo "-- Rapport generation service"
-gradle addReports -b <%= $git_clone_directory %>/service_generation_rapport/build.gradle
+gradle addReports -b <%= $ogam::git_clone_directory %>/service_generation_rapport/build.gradle
 
-cp <%= $git_clone_directory %>/service_generation_rapport/config/OGAMRG.xml \
-<%= $tomcat_directory %>/conf/Catalina/localhost/OGAMRG.xml
+cp <%= $ogam::git_clone_directory %>/service_generation_rapport/config/OGAMRG.xml \
+<%= $ogam::tomcat_directory %>/conf/Catalina/localhost/OGAMRG.xml
 
-cp <%= $git_clone_directory %>/service_generation_rapport/build/libs/OGAMRG.war \
-<%= $tomcat_directory %>/webapps/OGAMRG.war
+cp <%= $ogam::git_clone_directory %>/service_generation_rapport/build/libs/OGAMRG.war \
+<%= $ogam::tomcat_directory %>/webapps/OGAMRG.war
 
 echo "-- Starting tomcat"
 sudo /etc/init.d/tomcat8 start

@@ -1,4 +1,5 @@
 class ogam::java {
+
     include java
     $java_home= $java::params::java['jdk']['java_home']
     file_line { 'env_java_home':
