@@ -44,7 +44,6 @@
 #
 class ogam (
     String $vhost_servername = 'agent.example.com',
-    String $cookie_domain = '.example.com',
     String $admin_ip_address = "192.168.50.1",
     String $host_ip_address = $ipaddress_eth1,
     String $pg_user = 'postgres',
