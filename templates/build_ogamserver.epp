@@ -38,7 +38,7 @@ cp -Tr <%= $ogam::git_clone_directory %>/website/htdocs/server/ogamServer $compo
 #cp -r $composer_path/web/* <%= $ogam::docroot_directory %> && rm -R $composer_path/web
 
 echo "-- Updating of the IP"
-sed -i "s|192.168.50.4|<%= $ogam::ipaddress_eth1 %>|" <%= $ogam::docroot_directory %>/app_dev.php
+sed -i "s|192.168.50.4|<%= $ogam::host_ip_address %>|" <%= $ogam::docroot_directory %>/app_dev.php
 
 echo "-- Set permissions on cache and logs"
 HTTPDUSER=`ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
