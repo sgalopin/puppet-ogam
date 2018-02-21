@@ -27,7 +27,7 @@ done
 echo "-- Installation of Ogam's database (env=$environment)"
 
 echo "-- Drop the old database"
-dropdb -w -U postgres -h localhost --if-exists ogam
+dropdb -w -U postgres -h localhost --if-exists ogam 2> /dev/null
 
 echo "-- UTF8 Database creation"
 createdb -w -U postgres -h localhost -E UTF8 ogam
