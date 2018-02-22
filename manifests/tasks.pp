@@ -20,4 +20,9 @@ class ogam::tasks {
     mode    => '0400',
     content => epp("${module_name}/build_ogamservices.epp"),
   }
+  file { "${ogam::local_scripts_directory}/tasks_plan.sh":
+    ensure  => 'file',
+    mode    => '0400',
+    content => epp("${module_name}/tasks_plan.epp"),
+  }
 }
