@@ -12,18 +12,11 @@ class ogam::tomcat {
         package_name => 'tomcat8',
     }->
     # https://tomcat.apache.org/tomcat-8.0-doc/logging.html#Considerations_for_production_usage
-    ext_file_line { 'tomcat_handlers':
-			ensure => present,
-			path   => '/etc/tomcat8/logging.properties',
-			match  => '^(\.*)handlers = (.*), java.util.logging.ConsoleHandler',
-			line   => '\1handlers = \2',
-      multiple => true,
-		}->
     ext_file_line { 'tomcat_logs_level':
       ensure => present,
       path   => '/etc/tomcat8/logging.properties',
       match  => '(.*).level = (.*)',
-      line   => '\1.level = SEVERE',
+      line   => '\1.level = FINER', # https://tomcat.apache.org/tomcat-8.0-doc/logging.html
       multiple => true,
     }->
     file { "${ogam::tomcat_directory}/lib":

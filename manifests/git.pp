@@ -9,6 +9,6 @@ class ogam::git {
         ensure   => latest,
         provider => git,
         source   => 'http://gitlab.dockerforge.ign.fr/ogam/ogam.git',
-        revision => 'master',
+        revision => 'develop',
     }
 }

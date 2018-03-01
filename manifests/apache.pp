@@ -4,7 +4,7 @@ class ogam::apache {
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-        log_level => 'error'
+        log_level => 'debug' # https://httpd.apache.org/docs/2.4/mod/core.html#loglevel
     }
 
     # APACHE Modules
@@ -17,7 +17,7 @@ class ogam::apache {
       ensure => present,
       path   => '/etc/php/7.0/apache2/php.ini',
       match  => 'error_reporting = .*',
-      line   => 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT',
+      line   => 'error_reporting = E_ALL', # http://php.net/manual/fr/function.error-reporting.php
     }->
     file_line { 'display_errors':
       ensure => present,
@@ -58,7 +58,7 @@ class ogam::apache {
         docroot_owner => 'www-data',
         docroot_group => 'www-data',
         options => ['Indexes','FollowSymLinks','MultiViews'],
-        directoryindex => 'app.php',
+        directoryindex => 'app_dev.php',
         php_values => {
             'post_max_size' => '100M',
             'upload_max_filesize' => '100M',
@@ -81,7 +81,7 @@ class ogam::apache {
             {
               comment      => 'Redirection to Symfony',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
-              rewrite_rule => ['^(.*)$ app.php [QSA,L]'],
+              rewrite_rule => ['^(.*)$ app_dev.php [QSA,L]'],
             },
           ],
         },{
@@ -91,20 +91,26 @@ class ogam::apache {
           path => "${ogam::docroot_directory}/OgamDesktop",
           custom_fragment => 'RewriteEngine Off',
         },{
+          path => "${ogam::git_clone_directory}/website/htdocs/client",
+          custom_fragment => 'RewriteEngine Off',
+        },{
           path => "/mapserv-ogam",
           provider => 'location',
           custom_fragment => "
 SetEnv MS_MAPFILE \"${ogam::conf_directory}/mapserver/ogam.map\"
 SetEnv MS_ERRORFILE \"${ogam::log_directory}/mapserver_ogam.log\"
-SetEnv MS_DEBUGLEVEL 0",
+SetEnv MS_DEBUGLEVEL 5", # http://mapserver.org/fr/development/rfc/ms-rfc-28.html
         },{
           path => "/tilecache-ogam",
           provider => 'location',
         }],
         aliases => [
             {
-                alias => '/odp',
+                alias => '/odd',
                 path  => "${ogam::docroot_directory}/OgamDesktop",
+            },{
+                alias => '/client',
+                path  => "${ogam::git_clone_directory}/website/htdocs/client",
             },{
                 scriptalias => '/mapserv-ogam',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",

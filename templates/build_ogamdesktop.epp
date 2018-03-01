@@ -3,26 +3,7 @@ set -e
 set -o pipefail
 
 # Default configuration :
-environment=production
-
-while [ "x$1" != "x"  ]
-do
-  case "$1" in
-      "--env" | "-e" )
-          shift
-          environment=$1
-          shift
-          ;;
-      "--help" | "-h" | * )
-          echo "Install Ogam Desktop"
-          echo "  Usage : $(basename $0) [options]"
-          echo "    Options :"
-          echo "      -e, --env    : Build environment [development, production, testing] (default: « $environment »)"
-          echo "      -h, --help   : Print help information and exit"
-          exit
-          ;;
-  esac
-done
+environment=development # [development, production, testing]
 
 echo "-- Installation of Ogam Desktop (env=$environment)"
 
@@ -36,8 +17,9 @@ app build -e $environment
 #----------------------------------------------------------------
 # Copy the client app into the public dir
 #----------------------------------------------------------------
-cp -Tr \
-<%= $ogam::git_clone_directory %>/website/htdocs/client/build/$environment/OgamDesktop \
+#if mountpoint -q <%= $ogam::docroot_directory %>/OgamDesktop; then
+#    umount <%= $ogam::docroot_directory %>/OgamDesktop
+#fi
+mkdir -p <%= $ogam::docroot_directory %>/OgamDesktop
+mount -o bind <%= $ogam::git_clone_directory %>/website/htdocs/client/build/$environment/OgamDesktop \
 <%= $ogam::docroot_directory %>/OgamDesktop
-chown -R www-data:www-data <%= $ogam::docroot_directory %>/OgamDesktop
-chmod g+w <%= $ogam::docroot_directory %>/OgamDesktop

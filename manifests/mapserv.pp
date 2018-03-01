@@ -14,14 +14,14 @@ class ogam::mapserv {
       path   => "${ogam::conf_directory}/mapserver/ogam.map",
       match  => '(.*)/vagrant/ogam/website/htdocs/logs(.*)',
       line   => "\\1${ogam::log_directory}\\2",
-	  multiple => true,
+	    multiple => true,
     }->
     ext_file_line { 'mapserver_map_conf_path':
       ensure => present,
       path   => "${ogam::conf_directory}/mapserver/ogam.map",
       match  => '(.*)/vagrant/ogam/mapserver(.*)',
       line   => "\\1${ogam::conf_directory}/mapserver\\2",
-	  multiple => true,
+	    multiple => true,
     }
 
     # mapserv is a fcgi compatible, use default config sethandler with .fcgi
