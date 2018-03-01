@@ -3,16 +3,16 @@ require 'json'
 require 'open3'
 require 'puppet'
 
-def service(action, environment)
+def service(action)
   case action
   when "build_db"
-    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_db.sh -e #{environment}"
+    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_db.sh"
   when "build_ogamserver"
-    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_ogamserver.sh -e #{environment}"
+    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_ogamserver.sh"
   when "build_ogamdesktop"
-    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_ogamdesktop.sh -e #{environment}"
+    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_ogamdesktop.sh"
   when "build_ogamservices"
-    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_ogamservices.sh -e #{environment}"
+    cmd_string = "/bin/bash /root/tmp/ogam/scripts/build_ogamservices.sh"
   else
     raise Puppet::Error, "Unknow action: #{action}"
   end
@@ -23,10 +23,9 @@ end
 
 params = JSON.parse(STDIN.read)
 action = params['action']
-environment = params['environment']
 
 begin
-  result = service(action, environment)
+  result = service(action)
   puts result.to_json
   exit 0
 rescue Puppet::Error => e

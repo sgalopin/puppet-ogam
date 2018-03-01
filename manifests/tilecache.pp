@@ -9,10 +9,12 @@ class ogam::tilecache {
       backup => true,
       mode    => '0644',
     }->
-    exec { "sed -i 's|/var/www/tilecache|${ogam::tilecache_directory}|' tilecache.cfg":
-      path     	=> '/usr/bin:/usr/sbin:/bin',
-      cwd 		  => "/etc",
-    }
+    ext_file_line { 'tilecache_base_path':
+      ensure => present,
+      path   => '/etc/tilecache.cfg',
+      match  => '(.*)/var/www/tilecache(.*)',
+      line   => "\\1${ogam::tilecache_directory}\\2",
+    }->
     file { '/usr/lib/python2.7/dist-packages/TileCache/Layer.py':
       ensure  => 'file',
       source => "${ogam::git_clone_directory}/vagrant_config/conf/tilecache/Layer.py",

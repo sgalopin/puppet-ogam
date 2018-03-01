@@ -59,9 +59,10 @@ class ogam (
     $local_scripts_directory  = "${tmp_directory}/scripts"
     $conf_directory           = "/etc/${app_name}"
     $www_directory            = "/var/www/${app_name}"
+    # The docroot_directory must be a direct subdir of the www_directory
     $docroot_directory        = "${www_directory}/web"
     $tilecache_directory      = "/var/www/tilecache"
-    # If you set the server upload dir to a subdir into /var/tmp be aware of the apache service "PrivateTmp" parameter
+    # If you set the server upload dir in a subdir of /var/tmp be aware of the apache service "PrivateTmp" parameter.
     $server_upload_directory  = "${www_directory}/upload"
     $service_upload_directory = "/var/tmp/${app_name}/service_upload"
     $log_directory            = "/var/log/${app_name}"
