@@ -4,7 +4,7 @@ set -o pipefail
 
 echo "-- Run all the module tasks"
 
-#sudo /bin/bash <%= $ogam::local_scripts_directory %>/build_db.sh
+sudo /bin/bash <%= $ogam::local_scripts_directory %>/build_db.sh
 sudo /bin/bash <%= $ogam::local_scripts_directory %>/build_ogamserver.sh
 sudo /bin/bash <%= $ogam::local_scripts_directory %>/build_ogamdesktop.sh
 sudo /bin/bash <%= $ogam::local_scripts_directory %>/build_ogamservices.sh
