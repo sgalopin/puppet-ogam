@@ -9,7 +9,8 @@ class ogam::apache {
 
     # APACHE Modules
     # 'libapache2-mod-php7.0' package required on debian (stretch) to avoid a bug... (but not on ubuntu-16.04)
-    package { [ 'libapache2-mod-php7.0', 'php-xml', 'php-pgsql' ]:
+    # 'php-xml' and 'php-mbstring' packages required per phpunit 
+    package { [ 'libapache2-mod-php7.0', 'php-pgsql', 'php-xml', 'php-mbstring' ]:
       ensure => 'installed'
     }->
     class { 'apache::mod::php': }->
