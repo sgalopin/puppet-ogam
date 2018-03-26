@@ -26,11 +26,7 @@ rm -rdf $composer_path/bin/*
 
 echo "-- Composer install"
 HOME=/root && export HOME
-case $environment in
-  # prod disabled due to composer misconfiguration (required vendor into dev part)
-  #prod) php $composer_path/composer.phar install --quiet --no-dev;;
-  *) php $composer_path/composer.phar install -d $composer_path --quiet;;
-esac
+php $composer_path/composer.phar install -d $composer_path --quiet --no-dev
 
 echo "-- Install assets"
 php $composer_path/app/console assets:install --quiet --no-debug --env=$environment $web_path
