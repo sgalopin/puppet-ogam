@@ -12,7 +12,7 @@ class ogam::tilecache {
     ext_file_line { 'tilecache_base_path':
       ensure => present,
       path   => '/etc/tilecache.cfg',
-      match  => '(.*)/var/www/tilecache(.*)',
+      match  => '(.*)@ogam::tilecache_directory@(.*)',
       line   => "\\1${ogam::tilecache_directory}\\2",
     }->
     file { '/usr/lib/python2.7/dist-packages/TileCache/Layer.py':

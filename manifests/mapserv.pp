@@ -12,15 +12,15 @@ class ogam::mapserv {
     ext_file_line { 'mapserver_map_log_path':
       ensure => present,
       path   => "${ogam::conf_directory}/mapserver/ogam.map",
-      match  => '(.*)/vagrant/ogam/website/htdocs/logs(.*)',
+      match  => '(.*)@ogam::log_directory@(.*)',
       line   => "\\1${ogam::log_directory}\\2",
       multiple => true,
     }->
     ext_file_line { 'mapserver_map_conf_path':
       ensure => present,
       path   => "${ogam::conf_directory}/mapserver/ogam.map",
-      match  => '(.*)/vagrant/ogam/mapserver(.*)',
-      line   => "\\1${ogam::conf_directory}/mapserver\\2",
+      match  => '(.*)@ogam::conf_directory@(.*)',
+      line   => "\\1${ogam::conf_directory}\\2",
       multiple => true,
     }
 

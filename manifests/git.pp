@@ -18,5 +18,10 @@ class ogam::git {
         provider => git,
         source   => 'https://github.com/IGNF/ogam.git',
         revision => 'develop',
+        depth => 1
+    }->
+    exec { "git config --global core.autocrlf false" :
+      path    => '/usr/bin:/usr/sbin:/bin',
+      cwd     => $ogam::git_clone_directory
     }
 }
