@@ -18,5 +18,6 @@ class ogam::git {
         provider => git,
         source   => 'https://github.com/IGNF/ogam.git',
         revision => 'master',
+        depth => 1
     }
 }
