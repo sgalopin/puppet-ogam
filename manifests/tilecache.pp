@@ -5,7 +5,7 @@ class ogam::tilecache {
 
     file { '/etc/tilecache.cfg':
       ensure  => 'file',
-      source => "${ogam::git_clone_directory}/vagrant_config/conf/tilecache/tilecache.cfg",
+      source => "${ogam::git_clone_directory}/tilecache/tilecache.cfg",
       backup => true,
       mode    => '0644',
     }->
@@ -17,7 +17,7 @@ class ogam::tilecache {
     }->
     file { '/usr/lib/python2.7/dist-packages/TileCache/Layer.py':
       ensure  => 'file',
-      source => "${ogam::git_clone_directory}/vagrant_config/conf/tilecache/Layer.py",
+      source => "${ogam::git_clone_directory}/tilecache/Layer.py",
       backup => true,
       mode    => '0644',
     }
