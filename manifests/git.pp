@@ -17,8 +17,7 @@ class ogam::git {
         ensure   => latest,
         provider => git,
         source   => 'https://github.com/IGNF/ogam.git',
-        revision => 'develop',
-        depth => 1
+        revision => 'develop'
     }->
     exec { "git config --global core.autocrlf false" :
       path    => '/usr/bin:/usr/sbin:/bin',
