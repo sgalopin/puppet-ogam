@@ -36,15 +36,6 @@ cp <%= $ogam::git_clone_directory %>/service_harmonization/config/OGAMHarmonizat
 cp <%= $ogam::git_clone_directory %>/service_harmonization/build/libs/service_harmonization-4.0.0.war \
 <%= $ogam::tomcat_directory %>/webapps/OGAMHarmonizationService.war
 
-echo "-- Rapport generation service"
-gradle addReports -b <%= $ogam::git_clone_directory %>/service_generation_rapport/build.gradle
-
-cp <%= $ogam::git_clone_directory %>/service_generation_rapport/config/OGAMRG.xml \
-<%= $ogam::tomcat_directory %>/conf/Catalina/localhost/OGAMRG.xml
-
-cp <%= $ogam::git_clone_directory %>/service_generation_rapport/build/libs/OGAMRG.war \
-<%= $ogam::tomcat_directory %>/webapps/OGAMRG.war
-
 echo "-- Starting tomcat"
 sudo /etc/init.d/tomcat8 start
 
