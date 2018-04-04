@@ -23,7 +23,7 @@ class ogam::tomcat {
       ensure => present,
       path   => '/etc/tomcat8/logging.properties',
       match  => '(.*).level = (.*)',
-      line   => '\1.level = SEVERE',
+      line   => '\1.level = SEVERE', # https://tomcat.apache.org/tomcat-8.0-doc/logging.html
       multiple => true,
     }->
     file { "${ogam::tomcat_directory}/lib":

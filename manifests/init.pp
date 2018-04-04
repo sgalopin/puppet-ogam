@@ -44,8 +44,9 @@
 #
 class ogam (
     String $vhost_servername = 'agent.example.com',
-    String $admin_ip_address = "192.168.50.1",
+    String $admin_ip_address = '192.168.50.1',
     String $host_ip_address = $ipaddress_eth1,
+    String $mailer_ip_address = '127.0.0.1',
     String $pg_user = 'postgres',
     String $pg_password = 'postgres',
     String $app_name = 'myapp'

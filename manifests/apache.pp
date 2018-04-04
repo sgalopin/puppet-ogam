@@ -4,7 +4,7 @@ class ogam::apache {
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-        log_level => 'error'
+        log_level => 'error' # https://httpd.apache.org/docs/2.4/mod/core.html#loglevel
     }
 
     # APACHE Modules
@@ -18,7 +18,7 @@ class ogam::apache {
       ensure => present,
       path   => '/etc/php/7.0/apache2/php.ini',
       match  => 'error_reporting = .*',
-      line   => 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT',
+      line   => 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT', # http://php.net/manual/fr/function.error-reporting.php
     }->
     file_line { 'display_errors':
       ensure => present,
@@ -97,7 +97,7 @@ class ogam::apache {
           custom_fragment => "
 SetEnv MS_MAPFILE \"${ogam::conf_directory}/mapserver/ogam.map\"
 SetEnv MS_ERRORFILE \"${ogam::log_directory}/mapserver_ogam.log\"
-SetEnv MS_DEBUGLEVEL 0",
+SetEnv MS_DEBUGLEVEL 0", # http://mapserver.org/fr/development/rfc/ms-rfc-28.html
         },{
           path => "/tilecache-ogam",
           provider => 'location',

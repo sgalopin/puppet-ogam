@@ -16,7 +16,7 @@ class ogam::postgresql {
 			ensure => present,
 			path   => '/etc/postgresql/9.6/main/postgresql.conf',
 			match  => 'client_min_messages = .*',
-			line   => 'client_min_messages = error',
+			line   => 'client_min_messages = error', # https://www.postgresql.org/docs/9.6/static/runtime-config-logging.html
 		}->
 		file_line { 'log_min_messages':
 			ensure => present,

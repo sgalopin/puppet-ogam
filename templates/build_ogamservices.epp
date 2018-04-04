@@ -11,9 +11,10 @@ echo "-- Stopping tomcat"
 sudo /etc/init.d/tomcat8 stop
 
 echo "-- Integration service"
+cp <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties.dist <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
-sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/IntegrationService.log|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
+sed -i "s|@ogam::log_directory@|<%= $ogam::log_directory %>|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
 
 gradle war -b <%= $ogam::git_clone_directory %>/service_integration/build.gradle
 
@@ -24,9 +25,10 @@ cp <%= $ogam::git_clone_directory %>/service_integration/build/libs/service_inte
 <%= $ogam::tomcat_directory %>/webapps/OGAMIntegrationService.war
 
 echo "-- Harmonization service"
+cp <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties.dist <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
-sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/HarmonizationService.log|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
+sed -i "s|@ogam::log_directory@|<%= $ogam::log_directory %>|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
 
 gradle war -b <%= $ogam::git_clone_directory %>/service_harmonization/build.gradle
 
@@ -35,15 +37,6 @@ cp <%= $ogam::git_clone_directory %>/service_harmonization/config/OGAMHarmonizat
 
 cp <%= $ogam::git_clone_directory %>/service_harmonization/build/libs/service_harmonization-4.0.0.war \
 <%= $ogam::tomcat_directory %>/webapps/OGAMHarmonizationService.war
-
-echo "-- Rapport generation service"
-gradle addReports -b <%= $ogam::git_clone_directory %>/service_generation_rapport/build.gradle
-
-cp <%= $ogam::git_clone_directory %>/service_generation_rapport/config/OGAMRG.xml \
-<%= $ogam::tomcat_directory %>/conf/Catalina/localhost/OGAMRG.xml
-
-cp <%= $ogam::git_clone_directory %>/service_generation_rapport/build/libs/OGAMRG.war \
-<%= $ogam::tomcat_directory %>/webapps/OGAMRG.war
 
 echo "-- Starting tomcat"
 sudo /etc/init.d/tomcat8 start
