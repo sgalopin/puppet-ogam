@@ -10,7 +10,9 @@ web_path=<%= $ogam::docroot_directory %>
 echo "-- Installation of Ogam Server (env=$environment)"
 
 echo "-- Updating of the IPs"
+cp $web_path/app_dev.php.dist $web_path/app_dev.php
 sed -i "s|@ogam::host_ip_address@|<%= $ogam::host_ip_address %>|" $web_path/app_dev.php
+cp $composer_path/app/config/parameters.yml.dist $composer_path/app/config/parameters.yml
 sed -i "s|@ogam::mailer_ip_address@|<%= $ogam::mailer_ip_address %>|" $composer_path/app/config/parameters.yml
 
 echo "-- Set permissions on cache and logs"

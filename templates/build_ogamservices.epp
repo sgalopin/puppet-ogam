@@ -11,6 +11,7 @@ echo "-- Stopping tomcat"
 sudo /etc/init.d/tomcat8 stop
 
 echo "-- Integration service"
+cp <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties.dist <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=DEBUG, stdout|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=TRACE, logfile|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|@ogam::log_directory@|<%= $ogam::log_directory %>|" <%= $ogam::git_clone_directory %>/service_integration/config/log4j.properties
@@ -24,6 +25,7 @@ cp <%= $ogam::git_clone_directory %>/service_integration/build/libs/service_inte
 <%= $ogam::tomcat_directory %>/webapps/OGAMIntegrationService.war
 
 echo "-- Harmonization service"
+cp <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties.dist <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=DEBUG, stdout|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=TRACE, logfile|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|@ogam::log_directory@|<%= $ogam::log_directory %>|" <%= $ogam::git_clone_directory %>/service_harmonization/config/log4j.properties
