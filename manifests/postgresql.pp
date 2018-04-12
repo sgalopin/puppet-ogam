@@ -16,19 +16,19 @@ class ogam::postgresql {
 			ensure => present,
 			path   => '/etc/postgresql/9.6/main/postgresql.conf',
 			match  => 'client_min_messages = .*',
-			line   => 'client_min_messages = error', # https://www.postgresql.org/docs/9.6/static/runtime-config-logging.html
+			line   => 'client_min_messages = error', # https://www.postgresql.org/docs/9.6/static/runtime-config-logging.html (default : notice)
 		}->
 		file_line { 'log_min_messages':
 			ensure => present,
 			path   => '/etc/postgresql/9.6/main/postgresql.conf',
 			match  => 'log_min_messages = .*',
-			line   => 'log_min_messages = error',
+			line   => 'log_min_messages = error', # (default : warning)
 		}->
 		file_line { 'log_min_error_statement':
 			ensure => present,
 			path   => '/etc/postgresql/9.6/main/postgresql.conf',
 			match  => 'log_min_error_statement = .*',
-			line   => 'log_min_error_statement = error',
+			line   => 'log_min_error_statement = error', # (default : error)
 		}
 
 		# Installs the PostgreSQL postgis packages

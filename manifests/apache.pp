@@ -4,7 +4,7 @@ class ogam::apache {
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-        log_level => 'error' # https://httpd.apache.org/docs/2.4/mod/core.html#loglevel
+        log_level => 'error' # https://httpd.apache.org/docs/2.4/mod/core.html#loglevel (default : warn)
     }
 
     # APACHE Modules

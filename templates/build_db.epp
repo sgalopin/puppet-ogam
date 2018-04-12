@@ -17,6 +17,7 @@ echo "-- Add-ons"
 psql -qw -U postgres -h localhost -d ogam -c "CREATE EXTENSION postgis"
 
 echo "-- Scripts"
+psql -qw -U postgres -h localhost -d ogam -f "<%= $ogam::git_clone_directory %>/database/1-Create_harmonized_data_schema.sql"
 psql -qw -U postgres -h localhost -d ogam -f "<%= $ogam::git_clone_directory %>/database/1-Create_mapping_schema.sql"
 psql -qw -U postgres -h localhost -d ogam -f "<%= $ogam::git_clone_directory %>/database/1-Create_metadata_schema.sql"
 psql -qw -U postgres -h localhost -d ogam -f "<%= $ogam::git_clone_directory %>/database/1-Create_raw_data_schema.sql"
